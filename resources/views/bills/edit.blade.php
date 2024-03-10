@@ -66,7 +66,7 @@
                                     {{-- product select --}}
                                     <div class="col-md-3 mb-3 ">
                                         <label for="product_id"> {{ trans('page_trans.products') }}</label>
-                                        <select required class="products form-control" name="product_id[]" id="products1">
+                                        <select required class="products form-control" name="product_id[]" id="product_0">
                                             <option>{{ trans('main_trans.product') }}</option>
                                             @foreach ($products as $product)
                                             @if ($info->product_id==$product->id)
@@ -167,15 +167,23 @@
 
 @section('js')
     <script>
-    let price_before;
+    let i=0;
+
+$(document).ready(function() {
+    var product="#product_"+i;
+    $(product).select2();
+    $('#customer_id').select2();
+
+});
 
     $(document).ready(function(){
             $(".add_item_btn").click(function(e){
                 e.preventDefault();
+                i++;
                 $("#show_item").append(`
                     <div class="row mt-5">
                         <div class="col-md-3 mb-3">
-                            <select required class="products form-control" id="products2" name="product_id[]">
+                            <select required class="products form-control" id="product_`+i+`" name="product_id[]">
                                 <option>{{ trans('main_trans.product') }}</option>
                                 @foreach ($products as $product)
                                     <option value="{{ $product->id }}">{{ $product->product_name }} - {{ $product->product_company }}</option>
@@ -196,7 +204,9 @@
                         </div>
                     </div>
                 `);
-                $(".products").select2();
+
+                var product="#product_"+i;
+                    $(product).select2();
                 calculateProduct();
             });
         });
@@ -210,16 +220,6 @@
 
     })
         // In your Javascript (external .js resource or <script> tag)
-$(document).ready(function() {
-    var products = document.querySelectorAll('.products');
-    $(products).select2()
-    $('#products1').select2();
-    $('.products').select2();
-    $('#customer_id').select2();
-    array.forEach(products => {
-        product.select2;
-    });
-});
 
 
     function discountFun(){
