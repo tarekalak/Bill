@@ -60,10 +60,10 @@
                                 {{-- Product select --}}
                                 <div class="col-md-3 mb-3">
                                     <label for="product_id">{{ trans('page_trans.products') }}</label>
-                                    <select required class="products form-control" name="product_id[]">
+                                    <select required class="products form-control" name="product_id[]" id="product_0">
                                         <option>{{ trans('main_trans.product') }}</option>
                                         @foreach ($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->product_name }} - {{ $product->product_company }}</option>
+                                        <option value="{{ $product->id }}">{{ $product->product_name }} - {{ $product->product_company }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -148,15 +148,21 @@
 
 @section('js')
     <script>
-        let price_before;
+        let i=0;
+        $(document).ready(function() {
+            var product='#product_'+i;
+            $(product).select2();
+            $('#customer_id').select2();
+        });
 
         $(document).ready(function(){
             $(".add_item_btn").click(function(e){
                 e.preventDefault();
+                i++;
                 $("#show_item").append(`
                     <div class="row mt-5">
                         <div class="col-md-3 mb-3">
-                            <select required class="products form-control" id="products2" name="product_id[]">
+                            <select required class="products form-control" id="product_`+i+`" name="product_id[]">
                                 <option>{{ trans('main_trans.product') }}</option>
                                 @foreach ($products as $product)
                                     <option value="{{ $product->id }}">{{ $product->product_name }} - {{ $product->product_company }}</option>
@@ -164,6 +170,7 @@
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">
+
                             <input required oninput="calculateProduct()" type="number" name="quantity[]" class="form-control quantity" placeholder="{{ trans('page_trans.quantity') }}">
                         </div>
                         <div class="col-md-3 mb-3">
@@ -177,7 +184,9 @@
                         </div>
                     </div>
                 `);
-                $(".products").select2();
+                var product='#product_'+i;
+                $(product).select2();
+
                 calculateProduct();
             });
         });
@@ -189,10 +198,6 @@
             calculateProduct();
         });
 
-        $(document).ready(function() {
-            $('.products').select2();
-            $('#customer_id').select2();
-        });
 
         function discountFun(){
             var discount=document.getElementById('discount').value;
