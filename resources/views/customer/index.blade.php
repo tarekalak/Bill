@@ -52,17 +52,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $info)
+                            @foreach ($customers as $customer)
                             <tr>
-                                <td>{{$info->customer_name}}</td>
-                                <td>{{$info->phone}}</td>
-                                <td>{{$info->location}}</td>
-                                <td>{{$info->email}}</td>
+                                <td>{{$customer->customer_name}}</td>
+                                <td>{{$customer->phone}}</td>
+                                <td>{{$customer->location}}</td>
+                                <td>{{$customer->email}}</td>
                                 <td style="text-align: right">
                                     <div class="row">
                                         @can('customer edit')
                                         <div class="col-2 mx-1">
-                                            <form action="{{ route('customer.edit',$info->id) }}">
+                                            <form action="{{ route('customer.edit',$customer->id) }}">
 
                                                 <button type="submit" class="btn btn-success" ><i class="fa fa-pencil"></i></button>
                                             </form>
@@ -70,7 +70,7 @@
                                         @endcan
                                         @can('customer delete')
                                         <div class="col-2 mx-1">
-                                            <form action="{{ route('customer.destroy',$info->id) }}"  method="post">
+                                            <form action="{{ route('customer.destroy',$customer->id) }}"  method="post">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
@@ -82,6 +82,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $customers->links() }}
                 </div>
             </div>
         </div>

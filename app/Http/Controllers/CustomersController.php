@@ -21,8 +21,8 @@ class CustomersController extends Controller
      */
     public function index()
     {
-        $data=Customer::select('*')->orderby('id')->paginate(0);
-        return view('customer.index',['data'=>$data]);
+        $customers=Customer::select('*')->orderby('id')->paginate(5);
+        return view('customer.index',['customers'=>$customers]);
     }
     public function create()
     {
@@ -64,8 +64,8 @@ class CustomersController extends Controller
      */
     public function edit(string $id)
     {
-        $data=Customer::select('*')->where(['id'=>$id])->first();
-        return view('customer.edit',['data'=>$data]);
+        $customer=Customer::select('*')->where(['id'=>$id])->first();
+        return view('customer.edit',['customer'=>$customer]);
     }
 
     /**

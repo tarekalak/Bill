@@ -55,7 +55,7 @@ class BillController extends Controller
     ->with('bill_details')
     ->whereDate('date', '=', date('Y-m-d'))
     ->orderBy('date', 'DESC')
-    ->paginate(0);
+    ->paginate(5);
         $company=Company::select('*')->where(['id'=>1])->first();
         return view('bills.index',['bills'=>$bills,'company'=>$company]);
 
@@ -66,8 +66,8 @@ class BillController extends Controller
      */
     public function create()
     {
-        $products=Product::select('*')->orderby('id')->paginate(0);
-        $customers=Customer::select('*')->orderby('id')->paginate(0);
+        $products=Product::all();
+        $customers=Customer::all();
         return view('bills.create',['products'=>$products,'customers'=>$customers]);
     }
 
@@ -117,8 +117,8 @@ class BillController extends Controller
      */
     public function edit(string $id)
     {
-        $products=Product::select('*')->orderby('id')->paginate(0);
-        $customers=Customer::select('*')->orderby('id')->paginate(0);
+        $products=Product::select('*')->orderby('id');
+        $customers=Customer::select('*')->orderby('id');
         $bill=Bill::with('bill_details')->select('*')->where(['id'=>$id])->first();
         return view('bills.edit',['bill'=>$bill,'products'=>$products,'customers'=>$customers]);
     }

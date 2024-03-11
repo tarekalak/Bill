@@ -20,7 +20,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products=Product::select('*')->orderby('id')->paginate(0);
+        $products=Product::select('*')->orderby('id')->paginate(2);
         return view('Product.index',['products'=>$products]);
     }
     public function create()

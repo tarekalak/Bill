@@ -35,17 +35,17 @@
 <!-- row -->
 <div class="row">
     <div class="container" style="margin: 30px">
-        <form action="{{ route('customer.update',$data->id) }}" method="post">
+        <form action="{{ route('customer.update',$customer->id) }}" method="post">
             @csrf
             @method('PUT')
             <label for="customerName">{{ trans('page_trans.cust_name') }}</label>
-            <input class="form-control border border-1 mb-1" type="text" name="customer_name" id="customer_name" placeholder="{{ trans('page_trans.cust_name') }}" value="{{ $data->customer_name }}">
+            <input class="form-control border border-1 mb-1" type="text" name="customer_name" id="customer_name" placeholder="{{ trans('page_trans.cust_name') }}" value="{{ $customer->customer_name }}">
             <label for="customerName">{{ trans('page_trans.phone') }}</label>
-            <input class="form-control border border-1 mb-1" type="text" name="phone" id="phone" placeholder="{{ trans('page_trans.phone') }}" value="{{ $data->phone }}">
+            <input class="form-control border border-1 mb-1" type="text" name="phone" id="phone" placeholder="{{ trans('page_trans.phone') }}" value="{{ $customer->phone }}">
             <label for="customerName">{{ trans('page_trans.location') }}</label>
-            <input class="form-control border border-1 mb-1" type="text" name="location" id="location" placeholder="{{ trans('page_trans.location') }}" value="{{ $data->location }}">
+            <input class="form-control border border-1 mb-1" type="text" name="location" id="location" placeholder="{{ trans('page_trans.location') }}" value="{{ $customer->location }}">
             <label for="customerName">{{ trans('page_trans.email') }}</label>
-            <input class="form-control border border-1 mb-1" type="text" name="email" id="email" placeholder="{{ trans('page_trans.email') }}" value="{{ $data->email }}">
+            <input class="form-control border border-1 mb-1" type="text" name="email" id="email" placeholder="{{ trans('page_trans.email') }}" value="{{ $customer->email }}">
 
 
 

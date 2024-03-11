@@ -128,6 +128,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $bills->links() }}
                 </div>
             </div>
         </div>
