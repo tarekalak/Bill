@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
+use function Laravel\Prompts\select;
+
 class BillController extends Controller
 {
 
@@ -29,22 +31,22 @@ class BillController extends Controller
      * Display a listing of the resource.
      */
     public function __invoke(Request $request)
-    {        $company=Company::select('*')->where(['id'=>1])->first();
+    {
 
         if($request->bill_date_start == null && $request->bill_date_end!=null){
-            $bills=Bill::with('users')->with('customers')->with('bill_details')->whereDate('date','<=',$request->bill_date_end)->get();
+            $bills=Bill::with('bill_details')->select("*")->whereDate('date','<=',$request->bill_date_end)->paginate(0);
         }
        elseif($request->bill_date_end == null && $request->bill_date_start!=null){
-            $bills=Bill::with('users')->with('customers')->with('bill_details')->whereDate('date','>=',$request->bill_date_start)->get();
+            $bills=Bill::with('bill_details')->select('*')->whereDate('date','>=',$request->bill_date_start)->paginate(0);
         }
         elseif($request->bill_date_start!=null && $request->bill_date_end!=null){
-            $bills=Bill::with('users')->with('customers')->with('bill_details')->whereDate('date','>=',$request->bill_date_start)->whereDate('date','<=',$request->bill_date_end)->get();
+            $bills=Bill::with('bill_details')->select('*')->whereDate('date','>=',$request->bill_date_start)->whereDate('date','<=',$request->bill_date_end)->paginate(0);
         }
         else{
             return redirect(route('bill.index'));
          }
 
-        return view('bills.index',['bills'=>$bills,'company'=>$company]);
+        return view('bills.index',['bills'=>$bills]);
     }
 
 
@@ -117,8 +119,8 @@ class BillController extends Controller
      */
     public function edit(string $id)
     {
-        $products=Product::select('*')->orderby('id');
-        $customers=Customer::select('*')->orderby('id');
+        $products=Product::all();
+        $customers=Customer::all();
         $bill=Bill::with('bill_details')->select('*')->where(['id'=>$id])->first();
         return view('bills.edit',['bill'=>$bill,'products'=>$products,'customers'=>$customers]);
     }
@@ -132,18 +134,17 @@ class BillController extends Controller
         $data    ['user_name'] =    Auth::user()->name;
         $data    ['discount'] = ($request->discount) ? $request->discount : 0 ;
         $data    ['date'] = ($request->date) ? $request->date :date('Y/m/d H:m:s');
-
+        if(!$request->quantity){
+            return redirect()->back()->with('null','The bill cannot be empty');
+        }
         Bill::where(['id'=>$id])->update($data);
-        $num_of_prod_in_bill=Bill_details::where(['bill_id'=>$id])->count();
+        Bill_details::where(['bill_id'=>$id])->delete();
         foreach($request->quantity as $i=>$key){
         $info['product_id']= $request->product_id[$i];
         $info['quantity']= $request->quantity[$i];
         $info['product_price']=($request->product_price[$i]) ? $request->product_price[$i] : Product::where(['id'=>$request->product_id[$i]])->value('product_price')* $info['quantity'];
         $info['bill_id']= $id;
-        if($num_of_prod_in_bill>$i)
 
-            Bill_details::where(['id'=>$request->id])->update($info);
-        else
         Bill_details::create($info);
 
         }
@@ -161,24 +162,6 @@ class BillController extends Controller
         return redirect()->route('bill.index');
     }
 
-    function search(Request $request) {
-        if($request->bill_date_start == null && $request->bill_date_end!=null){
-            $data=Bill::with('users')->with('customers')->with('bill_details')->whereDate('date','<=',$request->bill_date_end)->get();
-        }
-       elseif($request->bill_date_end == null && $request->bill_date_start!=null){
-            $data=Bill::with('users')->with('customers')->with('bill_details')->whereDate('date','>=',$request->bill_date_start)->get();
-        }
-        elseif($request->bill_date_start!=null && $request->bill_date_end!=null){
-            $data=Bill::with('users')->with('customers')->with('bill_details')->whereDate('date','>=',$request->bill_date_start)->whereDate('date','<=',$request->bill_date_end)->get();
-        }
-        else{
-            return redirect(route('bill.index'));
-         }
-
-
-        return view('bills.billIndex',['data'=>$data]);
-
-}
     public function getprice($id){
         $product_price= Product::where(['id'=>$id])->value('product_price');
         return json_encode($product_price);

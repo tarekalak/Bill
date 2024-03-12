@@ -25,6 +25,11 @@
 @section('content')
 <!-- row -->
 <div class="row">
+    @if ($message = Session::get('null'))
+        <div class="alert alert-danger">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
     <div class="col-md-12 mb-30">
         <div class="card card-statistics h-100">
             <div class="card-body">
@@ -38,15 +43,15 @@
 
                             {{-- Customer --}}
                             <div class="col">
-                                <label for="customer_id">{{ trans('page_trans.customers') }}</label>
-                                <select  name="customer_id" id="customer_id" class="customers form-control">
+                                <label for="customer_name">{{ trans('page_trans.customers') }}</label>
+                                <select  name="customer_name" id="customer_name" class="customers form-control">
                                     <option value=" ">{{ trans('page_trans.customers') }}</option>
                                     @foreach ($customers as $customer)
-                                    @if($bill->customer_name==$customer->name)
-                                    <option selected value="{{ $customer->name }}">{{ $customer->customer_name }}</option>
-                                    @else
-                                    <option value="{{ $customer->name }}">{{ $customer->customer_name }}</option>
-                                    @endif
+                                    <option
+                                    @if($bill->customer_name==$customer->customer_name)
+                                     selected
+                                     @endif
+                                     value="{{ $customer->customer_name }}">{{ $customer->customer_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -97,7 +102,8 @@
                                     </div>
 
                                     <div class=" float-right col-md-1 mt-3"><br>
-                                        <p>#</p>
+                                        <button class="btn btn-danger remove_item_btn fa fa-minus"></button>
+
                                     </div>
                                     <hr>
                                 </div>
@@ -172,7 +178,7 @@
 $(document).ready(function() {
     var product="#product_"+i;
     $(product).select2();
-    $('#customer_id').select2();
+    $('#customer_name').select2();
 
 });
 

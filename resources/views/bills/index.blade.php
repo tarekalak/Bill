@@ -29,16 +29,12 @@
         <div class="card">
             <div class="card-header pb-0">
 
-                @if($errors->any())
-                <div class="alert alert-danger">
-                <h4 class="card-title mg-b-0"><a class="btn btn-outline-primary btn-block " href="{{ route('bill.create') }}">{{ trans('page_trans.new_bill') }}</a></h4>
-                    <ul>
-                        @foreach ($errors->all as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                @if ($message = Session::get('success'))
+                <div class="alert alert-success">
+                    <p>{{ $message }}</p>
                 </div>
-                @endif
+            @endif
+
                 <form action="{{ route('searchBill') }}" method="get">
                     <div class="row">
                         <div class="col-1"><br>
