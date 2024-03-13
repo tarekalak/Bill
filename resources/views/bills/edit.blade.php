@@ -71,11 +71,11 @@
                                     {{-- product select --}}
                                     <div class="col-md-3 mb-3 ">
                                         <label for="product_id"> {{ trans('page_trans.products') }}</label>
-                                        <select required class="products form-control" name="product_id[]" id="product_0">
+                                        <select required class="products form-control" name="product_id[]" id="product_old_{{ $key }}">
                                             <option>{{ trans('main_trans.product') }}</option>
                                             @foreach ($products as $product)
                                             @if ($info->product_id==$product->id)
-                                            <option selected id="select2_{{ $key }}" value="{{ $product->id }}">{{ $product->product_name }} - {{ $product->product_company }}</option>
+                                            <option selected value="{{ $product->id }}">{{ $product->product_name }} - {{ $product->product_company }}</option>
                                             @else
                                             <option id="" value="{{ $product->id }}">{{ $product->product_name }} - {{ $product->product_company }}</option>
                                             @endif
@@ -173,11 +173,14 @@
 
 @section('js')
     <script>
-    let i=0;
-
+let i=0; //index for select 2
 $(document).ready(function() {
-    var product="#product_"+i;
-    $(product).select2();
+    var products = document.querySelectorAll('.products');
+    products.forEach(function(product,index) {
+        var product="#product_old_"+index;
+        $(product).select2();
+    });
+
     $('#customer_name').select2();
 
 });
